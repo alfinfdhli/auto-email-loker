@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    :root {
+      --bg-color: linear-gradient(135deg, #a8ff78 0%, #78ffd6 100%);
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --accent-color: #1a73e8;
+      --text-color: #222222;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 10px;
+      max-width: 520px;
+      margin: auto;
+      background: var(--bg-color);
+      background-attachment: fixed;
+      color: var(--text-color);
+      transition: background 0.8s ease, background-color 0.8s ease;
+      position: relative;
+      height: 100vh;
+      max-height: 100vh;
+      box-sizing: border-box;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    body.state-loading-bg {
+      background: linear-gradient(-45deg, #0b132b, #1c2541, #3a506b, #1a73e8) !important;
+      background-size: 400% 400% !important;
+      animation: gradientBG 2s ease infinite !important;
+    }
+
+    body.state-success-bg {
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%) !important;
+    }
+
+    body.state-failure-bg {
+      background: linear-gradient(135deg, #300000 0%, #800000 50%, #1a0000 100%) !important;
+      animation: pulseRed 1.2s infinite alternate;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes pulseRed {
+      0% { filter: brightness(1); }
+      100% { filter: brightness(1.4); }
+    }
+
+    #effectCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 90;
+    }
+
+    .top-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 100;
+    }
+
+    /* TOMBOL AUDIO (WARNA TEXT & BORDER HITAM) */
+    .audio-toggle-btn {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1.5px solid #000000;
+      color: #000000;
+      padding: 4px 10px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: all 0.2s;
+    }
+    .audio-toggle-btn:hover { background: #ffffff; color: #000000; transform: scale(1.03); }
+
+    .menu-dropdown-wrapper { position: relative; }
+    
+    /* TOMBOL TITIK 3 (WARNA TEXT & BORDER HITAM) */
+    .menu-dots-btn {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1.5px solid #000000;
+      color: #000000;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 36px;
+      background: white;
+      min-width: 190px;
+      border-radius: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+      z-index: 101;
+      overflow: hidden;
+      border: 1px solid #eee;
+    }
+
+    .dropdown-menu.show { display: block; }
+
+    .dropdown-item {
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #333;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .dropdown-item:hover { background: #f0f7ff; color: #1a73e8; }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      padding: 16px 20px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      position: relative;
+      z-index: 10;
+      transition: all 0.4s ease;
+      border: 2px solid rgba(255,255,255,0.8);
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    body.state-failure-bg .card {
+      border: 3px solid #ff4d4d;
+      box-shadow: 0 0 30px rgba(255, 77, 77, 0.7);
+      background: rgba(255, 230, 230, 0.96);
+    }
+
+    h2 { text-align: center; color: var(--accent-color); margin: 0 0 10px 0; font-size: 16px; font-weight: 800; }
+    label { font-weight: bold; margin-top: 8px; display: block; font-size: 11.5px; color: #333; }
+    
+    input[type="file"], textarea, button { 
+      width: 100%; 
+      margin-top: 4px; 
+      padding: 6px 8px; 
+      border-radius: 8px; 
+      border: 1px solid #ccc; 
+      box-sizing: border-box; 
+      font-size: 12px; 
+    }
+    textarea { resize: none; height: 46px; }
+    
+    .paste-box { 
+      border: 2px dashed #1a73e8; 
+      background: rgba(232, 240, 254, 0.85); 
+      padding: 8px; 
+      text-align: center; 
+      border-radius: 8px; 
+      margin-top: 4px; 
+      cursor: pointer; 
+      color: #1a73e8; 
+      font-size: 11.5px; 
+      line-height: 1.3; 
+      transition: all 0.3s; 
+    }
+    .paste-box:hover { background: #d2e3fc; transform: scale(1.01); }
+    .preview-img { max-width: 100%; max-height: 110px; margin-top: 6px; border-radius: 8px; display: none; margin-left: auto; margin-right: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    
+    button { background-color: #1a73e8; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 12px; transition: 0.2s; font-size: 13.5px; padding: 9px; border-radius: 10px; box-shadow: 0 3px 10px rgba(26,115,232,0.3); }
+    button:hover { background-color: #1557b0; transform: translateY(-1px); }
+    button:disabled { background-color: #a0c3ff; cursor: not-allowed; box-shadow: none; }
+    
+    #status { margin-top: 8px; font-weight: bold; text-align: center; font-size: 11.5px; padding: 6px; border-radius: 8px; }
+    .success { background-color: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
+    .error { background-color: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
+    .loading { background-color: #e8f0fe; color: #1a73e8; border: 1px solid #d2e3fc; }
+    
+    .warning-box { background-color: #fef7e0; color: #b06000; border: 1px solid #feefc3; padding: 10px; border-radius: 10px; margin-top: 10px; font-size: 11.5px; line-height: 1.4; }
+    .helper-box { background-color: #f8f9fa; border: 1px solid #dadce0; padding: 8px; border-radius: 6px; margin-top: 8px; font-size: 11px; white-space: pre-wrap; font-family: monospace; max-height: 150px; overflow-y: auto; }
+    .btn-copy { background-color: #34a853; margin-top: 6px; padding: 6px; font-size: 11.5px; }
+    .file-info { font-size: 10px; color: #555; margin-top: 2px; }
+
+    .tree-branch { position: fixed; top: 0; right: 0; width: 200px; height: 90px; pointer-events: none; z-index: 15; }
+    .snake-svg { position: absolute; top: 18px; right: 25px; width: 85px; height: 30px; animation: snakeSlither 4s ease-in-out infinite alternate; }
+    @keyframes snakeSlither { 0% { transform: translateX(0) scaleY(1); } 100% { transform: translateX(-20px) scaleY(0.85); } }
+
+    .ant-trail { position: fixed; bottom: 12px; left: 0; width: 100vw; height: 15px; pointer-events: none; z-index: 1; overflow: hidden; }
+    .ant { position: absolute; width: 8px; height: 4px; background: #111; border-radius: 50%; animation: antWalk 15s linear infinite; }
+    .ant::before, .ant::after { content: ''; position: absolute; background: #111; border-radius: 50%; }
+    .ant::before { width: 3px; height: 3px; left: -2px; top: 0.5px; }
+    .ant::after { width: 5px; height: 4px; right: -3px; top: 0; }
+    .ant-1 { animation-delay: 0s; } .ant-2 { animation-delay: -3s; } .ant-3 { animation-delay: -6s; } .ant-4 { animation-delay: -9s; } .ant-5 { animation-delay: -12s; }
+    @keyframes antWalk { 0% { left: -30px; } 100% { left: 105vw; } }
+
+    .clouds-layer { position: fixed; top: 5px; left: 0; width: 100%; height: 60px; pointer-events: none; z-index: 2; }
+    .cloud { position: absolute; fill: rgba(255, 255, 255, 0.75); animation: cloudFloat 20s linear infinite; }
+    .cloud-1 { top: 2px; width: 70px; animation-duration: 22s; }
+    .cloud-2 { top: 20px; width: 55px; animation-duration: 16s; animation-delay: -8s; }
+    @keyframes cloudFloat { 0% { left: -100px; } 100% { left: 105vw; } }
+
+    .zoo-char { position: fixed; pointer-events: none; z-index: 20; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+
+    .giraffe-svg { bottom: -10px; left: 3%; width: 65px; height: 105px; transform: translateY(65px); }
+    .lion-svg    { bottom: -10px; left: 24%; width: 58px; height: 58px; transform: translateY(38px); }
+    .human-svg   { bottom: -10px; left: 47%; width: 58px; height: 58px; transform: translateY(38px); }
+    .panda-svg   { bottom: -10px; left: 69%; width: 58px; height: 58px; transform: translateY(38px); }
+    .cat-svg     { bottom: -10px; left: 88%; width: 55px; height: 55px; transform: translateY(35px); }
+
+    .monkey-left-svg   { top: 30%; left: -5px; width: 50px; height: 50px; transform: translateX(-35px) rotate(90deg); }
+    .elephant-left-svg { top: 60%; left: -5px; width: 58px; height: 58px; transform: translateX(-40px) rotate(90deg); }
+    .bear-right-svg    { top: 30%; right: -5px; width: 55px; height: 55px; transform: translateX(38px) rotate(-90deg); }
+    .koala-right-svg   { top: 60%; right: -5px; width: 50px; height: 50px; transform: translateX(35px) rotate(-90deg); }
+    .owl-top-svg       { top: -8px; left: 18%; width: 48px; height: 48px; transform: translateY(-33px) rotate(180deg); }
+    .bat-top-svg       { top: -8px; right: 20%; width: 50px; height: 48px; transform: translateY(-33px) rotate(180deg); }
+
+    .state-curious .giraffe-svg { transform: translateY(15px); }
+    .state-curious .lion-svg    { transform: translateY(8px); }
+    .state-curious .human-svg   { transform: translateY(6px); }
+    .state-curious .panda-svg   { transform: translateY(6px); }
+    .state-curious .cat-svg     { transform: translateY(5px); }
+    .state-curious .monkey-left-svg   { transform: translateX(-6px) rotate(90deg); }
+    .state-curious .elephant-left-svg { transform: translateX(-8px) rotate(90deg); }
+    .state-curious .bear-right-svg    { transform: translateX(6px) rotate(-90deg); }
+    .state-curious .koala-right-svg   { transform: translateX(6px) rotate(-90deg); }
+    .state-curious .owl-top-svg       { transform: translateY(-4px) rotate(180deg); }
+    .state-curious .bat-top-svg       { transform: translateY(-4px) rotate(180deg); }
+
+    .state-loading-zoo .giraffe-svg { transform: translateY(10px); animation: zooBob 0.9s infinite ease-in-out alternate; }
+    .state-loading-zoo .lion-svg    { transform: translateY(4px);  animation: zooBob 0.8s infinite ease-in-out alternate 0.1s; }
+    .state-loading-zoo .human-svg   { transform: translateY(2px);  animation: zooBob 1.0s infinite ease-in-out alternate 0.2s; }
+    .state-loading-zoo .panda-svg   { transform: translateY(2px);  animation: zooBob 0.9s infinite ease-in-out alternate 0.25s; }
+    .state-loading-zoo .cat-svg     { transform: translateY(1px);  animation: zooBob 0.7s infinite ease-in-out alternate 0.15s; }
+
+    @keyframes zooBob { 0% { transform: translateY(12px); } 100% { transform: translateY(-6px); } }
+
+    .state-success-zoo .giraffe-svg { transform: translateY(-12px); }
+    .state-success-zoo .lion-svg    { transform: translateY(-8px); }
+    .state-success-zoo .human-svg   { transform: translateY(-6px); }
+    .state-success-zoo .panda-svg   { transform: translateY(-6px); }
+    .state-success-zoo .cat-svg     { transform: translateY(-5px); }
+
+    .state-failure-zoo .giraffe-svg { transform: translateY(80px) rotate(-12deg); }
+    .state-failure-zoo .lion-svg    { transform: translateY(50px) rotate(10deg); }
+    .state-failure-zoo .human-svg   { transform: translateY(50px) rotate(-8deg); }
+    .state-failure-zoo .panda-svg   { transform: translateY(50px) rotate(-10deg); }
+    .state-failure-zoo .cat-svg     { transform: translateY(45px) rotate(15deg); }
+
+    .eye-normal, .eye-curious, .eye-happy, .eye-sad { display: none; }
+    .mode-idle .eye-normal { display: block; }
+    .mode-curious .eye-curious { display: block; }
+    .mode-loading .eye-curious { display: block; }
+    .mode-success .eye-happy { display: block; }
+    .mode-failure .eye-sad { display: block; }
+  </style>
+</head>
+<body class="mode-idle">
+  
+  <canvas id="effectCanvas"></canvas>
+
+  <div class="top-header-bar">
+    <button class="audio-toggle-btn" id="audioToggleBtn" onclick="toggleAudio()">🔊 Audio ON</button>
+    
+    <div class="menu-dropdown-wrapper">
+      <button class="menu-dots-btn" onclick="toggleMenu()">⋮</button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <div class="dropdown-item" onclick="openSheetLink()">📊 Buka Google Sheet</div>
+        <div class="dropdown-item" onclick="openDriveLink()">📁 Buka Google Drive</div>
+        <div class="dropdown-item" onclick="triggerManualEmail()">🚀 Kirim Email Manual Sekarang</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="clouds-layer">
+    <svg class="cloud cloud-1" viewBox="0 0 100 60"><path d="M 10 40 A 20 20 0 0 1 30 20 A 25 25 0 0 1 70 20 A 20 20 0 0 1 90 40 Z"/></svg>
+    <svg class="cloud cloud-2" viewBox="0 0 100 60"><path d="M 10 40 A 20 20 0 0 1 30 20 A 25 25 0 0 1 70 20 A 20 20 0 0 1 90 40 Z"/></svg>
+  </div>
+
+  <div class="tree-branch">
+    <svg viewBox="0 0 280 120">
+      <path d="M 280 10 Q 180 30 110 25 Q 60 20 0 40" stroke="#4a2e15" stroke-width="14" fill="none" stroke-linecap="round"/>
+      <circle cx="110" cy="22" r="14" fill="#27ae60"/>
+      <circle cx="60" cy="22" r="15" fill="#2e7d32"/>
+    </svg>
+    <svg class="snake-svg" viewBox="0 0 120 40">
+      <path d="M 10 20 Q 30 5 50 20 T 90 20 T 110 20" stroke="#2ecc71" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <circle cx="112" cy="20" r="5" fill="#27ae60"/>
+    </svg>
+  </div>
+
+  <div class="ant-trail">
+    <div class="ant ant-1"></div><div class="ant ant-2"></div><div class="ant ant-3"></div><div class="ant ant-4"></div><div class="ant ant-5"></div>
+  </div>
+
+  <svg class="zoo-char monkey-left-svg mode-idle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#795548"/><circle cx="50" cy="53" r="22" fill="#d7ccc8"/><g class="eye-normal"><circle cx="40" cy="48" r="3" fill="#222"/><circle cx="60" cy="48" r="3" fill="#222"/></g><g class="eye-curious"><circle cx="40" cy="47" r="5" fill="#222"/><circle cx="60" cy="47" r="5" fill="#222"/></g><g class="eye-happy"><path d="M 35 48 Q 40 42 45 48" stroke="#222" stroke-width="2"/><path d="M 55 48 Q 60 42 65 48" stroke="#222" stroke-width="2"/></g><g class="eye-sad"><path d="M 35 45 L 45 51" stroke="#222" stroke-width="2"/><path d="M 55 45 L 65 51" stroke="#222" stroke-width="2"/></g></svg>
+  <svg class="zoo-char bear-right-svg mode-idle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="32" fill="#5d4037"/><ellipse cx="50" cy="58" rx="14" ry="10" fill="#d7ccc8"/><g class="eye-normal"><circle cx="38" cy="46" r="3.5" fill="#222"/><circle cx="62" cy="46" r="3.5" fill="#222"/></g><g class="eye-curious"><circle cx="38" cy="45" r="6" fill="#222"/><circle cx="62" cy="45" r="6" fill="#222"/></g><g class="eye-happy"><path d="M 33 46 Q 38 40 43 46" stroke="#222" stroke-width="2"/><path d="M 57 46 Q 62 40 67 46" stroke="#222" stroke-width="2"/></g><g class="eye-sad"><path d="M 33 43 L 43 49" stroke="#222" stroke-width="2"/><path d="M 57 43 L 67 49" stroke="#222" stroke-width="2"/></g></svg>
+  <svg class="zoo-char owl-top-svg mode-idle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#607d8b"/><circle cx="37" cy="48" r="11" fill="#fff"/><circle cx="63" cy="48" r="11" fill="#fff"/><polygon points="46,56 54,56 50,62" fill="#ffb300"/><g class="eye-normal"><circle cx="37" cy="48" r="4" fill="#222"/><circle cx="63" cy="48" r="4" fill="#222"/></g><g class="eye-curious"><circle cx="37" cy="48" r="7" fill="#222"/><circle cx="63" cy="48" r="7" fill="#222"/></g><g class="eye-happy"><path d="M 32 48 Q 37 42 42 48" stroke="#222" stroke-width="2"/><path d="M 58 48 Q 63 42 68 48" stroke="#222" stroke-width="2"/></g><g class="eye-sad"><path d="M 32 45 L 42 51" stroke="#222" stroke-width="2"/><path d="M 58 45 L 68 51" stroke="#222" stroke-width="2"/></g></svg>
+
+  <div class="card">
+    <h2> APP GUA SENDIRI ANJENG MANTEPP BANGET Input Loker Otomatis (AI Engine)</h2>
+    
+    <label>1. Gambar SS Loker (Upload ATAU Tekan <u>Ctrl + V</u>):</label>
+    <div class="paste-box" id="pasteArea">
+      Klik & Tekan <b>Ctrl + V</b> untuk Paste SS Gambar
+    </div>
+    <input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp" onchange="handleFileSelect(this)">
+    <img id="imgPreview" class="preview-img" alt="Preview Gambar">
+
+    <label>2. Teks / Link Loker (Opsional):</label>
+    <textarea id="textInput" rows="2" placeholder="Tempel deskripsi loker / link GForm di sini..." oninput="triggerCuriousState()"></textarea>
+
+    <label>3. Dokumen Tambahan (Opsional PDF/Word/JPG/PNG):</label>
+    <input type="file" id="docInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="triggerCuriousState()">
+    <div class="file-info">*Misal: Motivation Letter. Disimpan ke Drive & dikirim ke HRD.</div>
+
+    <button id="btnSubmit" onclick="processLoker()">Proses & Masukkan ke Sheet</button>
+    
+    <div id="status"></div>
+    <div id="gformAlertArea"></div>
+  </div>
+
+  <svg class="zoo-char giraffe-svg mode-idle" viewBox="0 0 100 160"><path d="M 35 50 L 35 160 L 65 160 L 65 50 Z" fill="#f39c12"/><circle cx="50" cy="80" r="6" fill="#d35400"/><ellipse cx="50" cy="40" rx="22" ry="18" fill="#f39c12"/><g class="eye-normal"><circle cx="40" cy="36" r="3" fill="#222"/><circle cx="60" cy="36" r="3" fill="#222"/></g><g class="eye-curious"><circle cx="40" cy="35" r="5" fill="#222"/><circle cx="60" cy="35" r="5" fill="#222"/></g><g class="eye-happy"><path d="M 35 37 Q 40 30 45 37" stroke="#222" stroke-width="2.5" fill="none"/><path d="M 55 37 Q 60 30 65 37" stroke="#222" stroke-width="2.5" fill="none"/></g><g class="eye-sad"><path d="M 35 33 L 45 40 M 45 33 L 35 40" stroke="#222" stroke-width="2.5"/><path d="M 55 33 L 65 40 M 65 33 L 55 40" stroke="#222" stroke-width="2.5"/></g></svg>
+  <svg class="zoo-char lion-svg mode-idle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="#d35400"/><circle cx="50" cy="52" r="26" fill="#f1c40f"/><g class="eye-normal"><circle cx="40" cy="46" r="3.5" fill="#222"/><circle cx="60" cy="46" r="3.5" fill="#222"/></g><g class="eye-curious"><circle cx="40" cy="45" r="6" fill="#222"/><circle cx="60" cy="45" r="6" fill="#222"/></g><g class="eye-happy"><path d="M 34 46 Q 40 38 46 46" stroke="#222" stroke-width="2.5" fill="none"/><path d="M 54 46 Q 60 38 66 46" stroke="#222" stroke-width="2.5" fill="none"/></g><g class="eye-sad"><path d="M 34 42 L 46 50" stroke="#222" stroke-width="2.5"/><path d="M 54 42 L 66 50" stroke="#222" stroke-width="2.5"/></g></svg>
+  <svg class="zoo-char human-svg mode-idle" viewBox="0 0 100 100"><circle cx="50" cy="55" r="30" fill="#f1c27d"/><path d="M 20 50 C 22 22, 78 22, 80 50 C 70 32, 30 32, 20 50 Z" fill="#2c1d11"/><g class="eye-normal"><circle cx="38" cy="52" r="4" fill="#222"/><circle cx="62" cy="52" r="4" fill="#222"/></g><g class="eye-curious"><circle cx="38" cy="50" r="6" fill="#222"/><circle cx="62" cy="50" r="6" fill="#222"/></g><g class="eye-happy"><path d="M 32 52 Q 38 44 44 52" stroke="#222" stroke-width="3" fill="none"/><path d="M 56 52 Q 62 44 68 52" stroke="#222" stroke-width="3" fill="none"/></g><g class="eye-sad"><path d="M 33 47 L 43 55 M 43 47 L 33 55" stroke="#222" stroke-width="3"/><path d="M 57 47 L 67 55 M 67 47 L 57 55" stroke="#222" stroke-width="3"/></g></svg>
+  <svg class="zoo-char panda-svg mode-idle" viewBox="0 0 100 100"><circle cx="50" cy="52" r="30" fill="#fff" stroke="#eee"/><ellipse cx="38" cy="48" rx="8" ry="6" fill="#222"/><ellipse cx="62" cy="48" rx="8" ry="6" fill="#222"/><g class="eye-normal"><circle cx="38" cy="48" r="2.5" fill="#fff"/><circle cx="62" cy="48" r="2.5" fill="#fff"/></g><g class="eye-curious"><circle cx="38" cy="48" r="4" fill="#fff"/><circle cx="62" cy="48" r="4" fill="#fff"/></g><g class="eye-happy"><path d="M 34 48 Q 38 42 42 48" stroke="#fff" stroke-width="2"/><path d="M 58 48 Q 62 42 66 48" stroke="#fff" stroke-width="2"/></g><g class="eye-sad"><path d="M 34 45 L 42 51" stroke="#fff" stroke-width="2"/><path d="M 58 45 L 66 51" stroke="#fff" stroke-width="2"/></g></svg>
+  <svg class="zoo-char cat-svg mode-idle" viewBox="0 0 100 100"><polygon points="22,35 35,10 45,38" fill="#e67e22"/><polygon points="78,35 65,10 55,38" fill="#e67e22"/><circle cx="50" cy="55" r="28" fill="#e67e22"/><g class="eye-normal"><ellipse cx="36" cy="50" rx="3.5" ry="5.5" fill="#222"/><ellipse cx="64" cy="50" rx="3.5" ry="5.5" fill="#222"/></g><g class="eye-curious"><circle cx="36" cy="48" r="6.5" fill="#222"/><circle cx="64" cy="48" r="6.5" fill="#222"/></g><g class="eye-happy"><path d="M 30 50 Q 36 42 42 50" stroke="#222" stroke-width="2.5" fill="none"/><path d="M 58 50 Q 64 42 70 50" stroke="#222" stroke-width="2.5" fill="none"/></g><g class="eye-sad"><path d="M 30 46 L 42 54" stroke="#222" stroke-width="2.5"/><path d="M 58 46 L 70 54" stroke="#222" stroke-width="2.5"/></g></svg>
+
+  <script>
+    var pastedBase64 = null;
+    var pastedMime = null;
+    var isProcessing = false;
+    var rainParticles = [];
+    var isRaining = true;
+    var rainIntensity = 30;
+    
+    var appSheetUrl = "";
+    var appDriveUrl = "";
+
+    var audioCtx = null;
+    var isAudioMuted = false;
+    var soundInterval = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function toggleAudio() {
+      isAudioMuted = !isAudioMuted;
+      var btn = document.getElementById('audioToggleBtn');
+      btn.innerText = isAudioMuted ? "🔇 Audio OFF" : "🔊 Audio ON";
+    }
+
+    // AUDIO SYNTH (VOLUME DISESUAIKAN MENJADI 200%)
+    function playSynthSound(type) {
+      if (isAudioMuted) return;
+      initAudio();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      if (type === 'thinking') {
+        if (soundInterval) clearInterval(soundInterval);
+        var pitchIndex = 0;
+        var freqs = [523.25, 659.25, 783.99, 1046.50];
+        soundInterval = setInterval(function() {
+          if (!isProcessing || isAudioMuted) { clearInterval(soundInterval); return; }
+          var osc = audioCtx.createOscillator();
+          var gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freqs[pitchIndex % freqs.length], audioCtx.currentTime);
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime); // Ditingkatkan 200% (dari 0.04)
+          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.15);
+          pitchIndex++;
+        }, 180);
+
+      } else if (type === 'success') {
+        if (soundInterval) clearInterval(soundInterval);
+        var notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+        notes.forEach(function(freq, index) {
+          setTimeout(function() {
+            if (isAudioMuted) return;
+            var osc = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime); // Ditingkatkan 200% (dari 0.1)
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.35);
+          }, index * 90);
+        });
+
+      } else if (type === 'failure') {
+        if (soundInterval) clearInterval(soundInterval);
+        var sadNotes = [400, 350, 300, 220];
+        sadNotes.forEach(function(freq, index) {
+          setTimeout(function() {
+            if (isAudioMuted) return;
+            var osc = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.16, audioCtx.currentTime); // Ditingkatkan 200% (dari 0.08)
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+          }, index * 110);
+        });
+      }
+    }
+
+    function toggleMenu() {
+      var dropdown = document.getElementById('dropdownMenu');
+      dropdown.classList.toggle('show');
+    }
+
+    window.onclick = function(e) {
+      if (!e.target.matches('.menu-dots-btn')) {
+        var dropdown = document.getElementById('dropdownMenu');
+        if (dropdown && dropdown.classList.contains('show')) {
+          dropdown.classList.remove('show');
+        }
+      }
+    };
+
+    function fetchLinks() {
+      google.script.run.withSuccessHandler(function(links) {
+        appSheetUrl = links.sheetUrl;
+        appDriveUrl = links.driveFolderUrl;
+      }).getAppLinks();
+    }
+
+    function openSheetLink() {
+      if (appSheetUrl) window.open(appSheetUrl, '_blank');
+      else alert("Link Google Sheet belum siap.");
+    }
+
+    function openDriveLink() {
+      if (appDriveUrl) window.open(appDriveUrl, '_blank');
+      else alert("Link Google Drive belum siap.");
+    }
+
+    function triggerManualEmail() {
+      setStatus("⏳ Sedang memproses pengiriman email manual...", "loading");
+      setVisualState('loading');
+      
+      google.script.run
+        .withSuccessHandler(function(resMsg) {
+          setStatus("🚀 " + resMsg, "success");
+          setVisualState('success');
+        })
+        .withFailureHandler(function(err) {
+          setStatus("❌ Gagal: " + err.message, "error");
+          setVisualState('failure');
+        })
+        .jalankanKirimEmailManual();
+    }
+
+    function initEffectCanvas() {
+      var canvas = document.getElementById('effectCanvas');
+      var ctx = canvas.getContext('2d');
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      rainParticles = [];
+      for (var i = 0; i < 80; i++) {
+        rainParticles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          length: Math.random() * 12 + 6,
+          speed: Math.random() * 7 + 4
+        });
+      }
+
+      function renderLoop() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (isRaining) {
+          ctx.strokeStyle = 'rgba(174, 194, 224, 0.6)';
+          ctx.lineWidth = 1.2;
+          ctx.lineCap = 'round';
+
+          for (var i = 0; i < rainIntensity; i++) {
+            var p = rainParticles[i];
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p.x - 2, p.y + p.length);
+            ctx.stroke();
+
+            p.y += p.speed;
+            p.x -= 0.5;
+
+            if (p.y > canvas.height) {
+              p.y = -20;
+              p.x = Math.random() * canvas.width;
+            }
+          }
+        }
+        requestAnimationFrame(renderLoop);
+      }
+      renderLoop();
+    }
+
+    function setVisualState(state) {
+      var body = document.body;
+      body.className = '';
+      
+      var chars = document.querySelectorAll('.zoo-char');
+      chars.forEach(function(c) {
+        c.classList.remove('mode-idle', 'mode-curious', 'mode-loading', 'mode-success', 'mode-failure');
+      });
+
+      if (state === 'curious') {
+        body.classList.add('state-curious');
+        chars.forEach(function(c) { c.classList.add('mode-curious'); });
+        rainIntensity = 40;
+      } else if (state === 'loading') {
+        body.classList.add('state-loading-bg', 'state-loading-zoo');
+        chars.forEach(function(c) { c.classList.add('mode-loading'); });
+        rainIntensity = 75;
+        playSynthSound('thinking');
+      } else if (state === 'success') {
+        body.classList.add('state-success-bg', 'state-success-zoo');
+        chars.forEach(function(c) { c.classList.add('mode-success'); });
+        triggerFireworks();
+        rainIntensity = 15;
+        playSynthSound('success');
+      } else if (state === 'failure') {
+        body.classList.add('state-failure-bg', 'state-failure-zoo');
+        chars.forEach(function(c) { c.classList.add('mode-failure'); });
+        rainIntensity = 80;
+        playSynthSound('failure');
+      } else {
+        chars.forEach(function(c) { c.classList.add('mode-idle'); });
+        rainIntensity = 30;
+      }
+    }
+
+    function triggerCuriousState() {
+      if (!isProcessing) {
+        setVisualState('curious');
+      }
+    }
+
+    function triggerFireworks() {
+      var canvas = document.getElementById('effectCanvas');
+      var ctx = canvas.getContext('2d');
+
+      var particles = [];
+      var colors = ['#ff4d4d', '#ffcc00', '#33cc33', '#3399ff', '#ff66cc', '#00ffff', '#ffffff'];
+
+      var centers = [
+        { x: canvas.width * 0.20, y: canvas.height * 0.30 },
+        { x: canvas.width * 0.50, y: canvas.height * 0.20 },
+        { x: canvas.width * 0.80, y: canvas.height * 0.30 }
+      ];
+
+      centers.forEach(function(center) {
+        for (var i = 0; i < 60; i++) {
+          var angle = Math.random() * Math.PI * 2;
+          var speed = Math.random() * 12 + 3;
+          particles.push({
+            x: center.x,
+            y: center.y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            radius: Math.random() * 3.5 + 1.5,
+            alpha: 1,
+            decay: Math.random() * 0.02 + 0.01
+          });
+        }
+      });
+
+      function animate() {
+        var active = false;
+        particles.forEach(function(p) {
+          if (p.alpha > 0) {
+            active = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.25;
+            p.alpha -= p.decay;
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+            ctx.fillStyle = p.color;
+            ctx.fill();
+            ctx.restore();
+          }
+        });
+        if (active) requestAnimationFrame(animate);
+      }
+      animate();
+    }
+
+    document.addEventListener('paste', function(e) {
+      var items = (e.clipboardData || e.originalEvent.clipboardData).items;
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf("image") === 0) {
+          var blob = items[i].getAsFile();
+          if (blob.size > 7 * 1024 * 1024) {
+            setStatus("Ukuran gambar hasil paste melebihi batas 7MB!", "error");
+            setVisualState('failure');
+            return;
+          }
+          var reader = new FileReader();
+          reader.onload = function(event) {
+            pastedBase64 = event.target.result.split(',')[1];
+            pastedMime = blob.type;
+            var img = document.getElementById('imgPreview');
+            img.src = event.target.result;
+            img.style.display = 'block';
+            document.getElementById('pasteArea').innerHTML = "✅ <b>Gambar Berhasil Di-paste!</b> (" + Math.round(blob.size/1024) + " KB)";
+            setVisualState('curious');
+          };
+          reader.readAsDataURL(blob);
+          e.preventDefault();
+          break;
+        }
+      }
+    });
+
+    function handleFileSelect(input) {
+      if (input.files && input.files[0]) {
+        var file = input.files[0];
+        if (file.size > 7 * 1024 * 1024) {
+          setStatus("Ukuran file gambar melebihi batas 7MB!", "error");
+          setVisualState('failure');
+          input.value = "";
+          return;
+        }
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          pastedBase64 = e.target.result.split(',')[1];
+          pastedMime = file.type;
+          var img = document.getElementById('imgPreview');
+          img.src = e.target.result;
+          img.style.display = 'block';
+          document.getElementById('pasteArea').innerHTML = "📁 <b>File Gambar Terpilih!</b>";
+          setVisualState('curious');
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function processLoker() {
+      if (isProcessing) return;
+
+      var textInput = document.getElementById('textInput').value;
+      var docInput = document.getElementById('docInput').files[0];
+      var btn = document.getElementById('btnSubmit');
+
+      if (!pastedBase64 && textInput.trim() === "") {
+        setStatus("Harap masukan gambar SS loker ATAU isi teks/link deskripsi loker!", "error");
+        setVisualState('failure');
+        return;
+      }
+
+      if (docInput && docInput.size > 5 * 1024 * 1024) {
+        setStatus("Ukuran dokumen tambahan melebihi batas 5MB!", "error");
+        setVisualState('failure');
+        return;
+      }
+
+      isProcessing = true;
+      btn.disabled = true;
+      document.getElementById('gformAlertArea').innerHTML = "";
+      setStatus("⏳ AI Gemini sedang menganalisis loker & menyusun data...", "loading");
+      setVisualState('loading');
+
+      if (docInput) {
+        var docReader = new FileReader();
+        docReader.onload = function(e) {
+          var docBase64 = e.target.result.split(',')[1];
+          sendToBackend(pastedBase64, pastedMime, textInput, {
+            name: docInput.name,
+            mimeType: docInput.type,
+            base64: docBase64
+          });
+        };
+        docReader.onerror = function() {
+          setStatus("Gagal membaca file dokumen tambahan.", "error");
+          setVisualState('failure');
+          isProcessing = false;
+          btn.disabled = false;
+        };
+        docReader.readAsDataURL(docInput);
+      } else {
+        sendToBackend(pastedBase64, pastedMime, textInput, null);
+      }
+    }
+
+    function sendToBackend(base64Image, mimeType, textInput, extraDoc) {
+      google.script.run
+        .withSuccessHandler(onSuccess)
+        .withFailureHandler(onFailure)
+        .analisisDanSimpan(base64Image, mimeType, textInput, extraDoc);
+    }
+
+    function onSuccess(responseRaw) {
+      isProcessing = false;
+      var res = JSON.parse(responseRaw);
+      setStatus("🎉 " + res.message, "success");
+      setVisualState('success');
+
+      var alertArea = document.getElementById('gformAlertArea');
+
+      if (res.is_gform && res.requires_unsupported_doc) {
+        var missingDoc = res.missing_docs_detail || "dokumen pendukung khusus";
+        var helperContent = res.gform_helper_answers || res.pesan_lamaran;
+
+        alertArea.innerHTML = 
+          '<div class="warning-box">' +
+            '⚠️ <b>GForm ini membutuhkan dokumen pendukung: ' + missingDoc + '</b>. Mohon dicek ulang.<br>' +
+            'Berikut aku siapkan rangkaian isi dari GForm dan kau akan langsung dibantu ke <b>Mode Helper</b>:' +
+            '<div class="helper-box" id="helperContentText">' + helperContent + '</div>' +
+            '<button class="btn-copy" onclick="copyHelperText()">📋 Salin Semua Jawaban GForm (1-Click Copy)</button>' +
+            (res.link_gform && res.link_gform !== '-' ? '<br><br>🔗 <a href="' + res.link_gform + '" target="_blank">Klik di sini untuk Buka Link GForm</a>' : '') +
+          '</div>';
+      } else if (res.is_gform) {
+        alertArea.innerHTML = 
+          '<div class="warning-box" style="background-color:#e8f0fe; color:#1a73e8; border-color:#d2e3fc;">' +
+            'ℹ️ <b>Loker Terdeteksi Berbasis GForm.</b><br>' +
+            'Rangkaian jawaban Mode Helper telah disimpan di Google Sheet.' +
+            (res.link_gform && res.link_gform !== '-' ? '<br>🔗 <a href="' + res.link_gform + '" target="_blank">Klik di sini untuk Buka Link GForm</a>' : '') +
+          '</div>';
+      }
+
+      resetForm();
+    }
+
+    function copyHelperText() {
+      var text = document.getElementById('helperContentText').innerText;
+      navigator.clipboard.writeText(text).then(function() {
+        alert("✅ Rangkaian jawaban GForm berhasil disalin ke clipboard!");
+      });
+    }
+
+    function onFailure(err) {
+      isProcessing = false;
+      setStatus("❌ " + err.message, "error");
+      setVisualState('failure');
+      document.getElementById('btnSubmit').disabled = false;
+    }
+
+    function setStatus(text, type) {
+      var statusDiv = document.getElementById('status');
+      statusDiv.className = type;
+      statusDiv.innerText = text;
+    }
+
+    function resetForm() {
+      pastedBase64 = null;
+      pastedMime = null;
+      document.getElementById('imageInput').value = "";
+      document.getElementById('docInput').value = "";
+      document.getElementById('textInput').value = "";
+      document.getElementById('imgPreview').style.display = "none";
+      document.getElementById('pasteArea').innerHTML = "Klik & Tekan <b>Ctrl + V</b> untuk Paste SS Gambar";
+      document.getElementById('btnSubmit').disabled = false;
+    }
+
+    window.onload = function() {
+      initEffectCanvas();
+      fetchLinks();
+    };
+  </script>
+</body>
+</html>
