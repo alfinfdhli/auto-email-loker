@@ -70,6 +70,7 @@ This project is intended to assist with job application workflows. AI-generated 
 ## Status
 
 Personal project under development.
+Semua hal dalam proyek ini adalah difokuskan untuk anak hukum yang telah melakukan sertifikasi advokat PKPA ataupun UPA, Mohon sesuaikan kualitas dan responsibilitas anda.
 
 ## Author
 
