@@ -1,6 +1,3 @@
-# auto-email-loker
-AI-powered job application email automation built with Google Apps Script.
-
 # Auto E-Mail Loker
 ### AI-Powered Job Application Assistant
 
