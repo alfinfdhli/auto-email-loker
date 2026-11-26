@@ -1,77 +1,89 @@
+```markdown
 # Auto E-Mail Loker
-### AI-Powered Job Application Assistant
+### AI-Powered Job Application Assistant for Legal Professionals
 
-Aplikasi berbasis Google Apps Script untuk membantu mengolah informasi lowongan kerja, menyiapkan draf lamaran berbantuan AI, dan mengelola proses pengiriman email lamaran kerja.
+A Google Apps Script-based web application designed to parse job postings, generate tailored application emails and PDF cover letters using AI, and automate email delivery workflows.
 
-## Fitur Utama
+## Overview & Target Audience
 
-- **AI-Powered Job Analysis:** Membantu mengidentifikasi informasi penting dari lowongan kerja.
-- **Automated Email Drafting:** Menyusun draf email lamaran berdasarkan informasi lowongan dan profil pelamar.
-- **Google Forms Support:** Membantu mengidentifikasi lowongan yang menggunakan Google Forms dan menyiapkan informasi yang diperlukan.
-- **Document Management:** Mendukung penggunaan dokumen lamaran seperti CV, ijazah, transkrip nilai, dan sertifikat PKPA.
-- **Google Sheets Integration:** Menyimpan dan mengelola data lowongan melalui Google Sheets.
-- **Email Automation:** Mendukung proses pengiriman email lamaran melalui Google Apps Script.
-- **AI Model Integration:** Menggunakan Gemini API untuk pemrosesan informasi berbasis AI.
+This project is specifically tailored for **law graduates** who have completed the **Advocate Profession Special Education (PKPA)** and/or passed the **Advocate Profession Examination (UPA)**. 
+
+Because the system automates outbound professional communications to recruiters and law firms, users are expected to maintain high standards of quality, accuracy, and professional responsibility when reviewing AI-generated drafts before dispatch.
+
+## Key Features
+
+- **Multimodal Job Parsing:** Extracts key details (company name, HR email, CC, position, category, and requirements) from pasted job descriptions or uploaded/pasted screenshots (`Ctrl + V`).
+- **Automated Email & Cover Letter Drafting:** Generates tailored application email bodies and structured 5-paragraph cover letters (available in Indonesian and English) aligned with legal and operational experience.
+- **Custom HTML Email Templating:** Formats outbound emails using a dedicated, clean HTML email layout (`EmailTemplate.html`) for consistent rendering across desktop and mobile mail clients.
+- **Dynamic PDF Cover Letter Generator:** Populates a Google Docs template and exports it directly into a ready-to-attach PDF file stored in Google Drive.
+- **Google Forms Detection & Helper:** Automatically identifies job postings requiring Google Forms submissions, flags missing custom document requirements, and generates ready-to-copy form responses.
+- **Multi-Key API Rotation & Fallback:** Built-in Gemini API key rotation and model fallback mechanism to handle rate limits (`HTTP 429`) and transient server errors gracefully.
+- **Google Sheets Queue & Scheduled Dispatch:** Logs parsed job entries into an `Email Queue` spreadsheet with customizable attachment toggles (CV, Cover Letter PDF, Diploma, Transcript, PKPA/UPA Certificate, and custom extra files) for scheduled or manual Gmail dispatch.
 
 ## Tech Stack
 
-- Google Apps Script
-- HTML, CSS, JavaScript
-- Google Sheets
-- Google Drive
-- Gemini API
+- **Backend:** Google Apps Script (JavaScript)
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript, HTML5 Canvas, Web Audio API
+- **AI Engine:** Google Gemini API (`generateContent` with Structured JSON Output)
+- **Workspace Integrations:** Google Sheets, Google Docs, Google Drive, Gmail
 
 ## Project Structure
 
 ```text
 Auto-E-Mail-Loker/
-├── Code.gs       # Backend and application logic
-├── Index.html    # Web application interface
-└── README.md     # Project documentation
+├── Code.gs             # Backend logic, Gemini API integration, PDF generator, and Gmail dispatcher
+├── Index.html          # Interactive Web App UI with clipboard image paste and real-time feedback
+├── EmailTemplate.html  # Responsive HTML email layout template for outbound applications
+└── README.md           # Project documentation
+
 ```
 
 ## Configuration
 
-Aplikasi menggunakan Google Apps Script dan membutuhkan konfigurasi layanan berikut:
+Store all API keys, Google Drive file/folder IDs, and sensitive parameters inside **Google Apps Script Properties** (`Project Settings > Script Properties`) rather than hardcoding them in `Code.gs`.
 
-- Google Sheets untuk penyimpanan data.
-- Google Drive untuk pengelolaan dokumen.
-- Gemini API untuk pemrosesan AI.
-- Gmail untuk pengiriman email lamaran.
+### Required Script Properties
 
-Simpan API keys, ID dokumen, ID folder, dan konfigurasi sensitif lainnya menggunakan **Google Apps Script Script Properties**, bukan dengan menuliskannya langsung di source code.
+| Property Key | Description |
+| --- | --- |
+| `GEMINI_KEYS` | Comma-separated list of Google Gemini API keys for automatic rotation. |
+| `GEMINI_MODEL` | Primary Gemini model identifier (e.g., `gemini-2.0-flash`). |
+| `FOLDER_TAMBAHAN_ID` | Google Drive folder ID for storing generated cover letters and extra attachments. |
+| `ID_TEMPLATE_DOCS` | Google Docs template file ID containing `{{PLACEHOLDER}}` tags for cover letters. |
+| `ID_CV` | Google Drive file ID of your Curriculum Vitae (PDF). |
+| `ID_IJAZAH` | Google Drive file ID of your Bachelor of Laws (S.H.) diploma. |
+| `ID_TRANSKRIP` | Google Drive file ID of your academic transcript. |
+| `ID_PKPA_UPA` | Google Drive file ID of your PKPA & UPA certificates. |
 
-Jangan mengunggah API keys, data pribadi, kredensial, atau dokumen lamaran ke repository publik.
+## Setup & Deployment
 
-## Setup
-
-1. Buat proyek baru di Google Apps Script.
-2. Tambahkan file `Code.gs` dan `Index.html`.
-3. Konfigurasikan Script Properties sesuai kebutuhan aplikasi.
-4. Siapkan Google Sheets dan Google Drive yang akan digunakan.
-5. Atur izin layanan Google yang diperlukan.
-6. Konfigurasikan Gemini API.
-7. Uji aplikasi menggunakan data contoh.
-8. Deploy sebagai Web App setelah konfigurasi selesai.
-
-Nama fungsi, properti konfigurasi, dan struktur spreadsheet harus mengikuti implementasi yang digunakan dalam proyek.
+1. **Create Apps Script Project:** Open [Google Apps Script](https://script.google.com/) (or open **Extensions > Apps Script** from your target Google Sheet) and create a new project.
+2. **Add Source Files:** Copy the contents of `Code.gs`, `Index.html`, and `EmailTemplate.html` into their respective files in the Apps Script editor.
+3. **Prepare Drive Assets:** Upload your application documents (CV, Diploma, Transcript, PKPA/UPA certificates) and create a Google Docs cover letter template in Google Drive.
+4. **Configure Script Properties:** Navigate to **Project Settings > Script Properties** and add all required keys listed in the Configuration table above.
+5. **Customize Candidate Profile:** Update the `PROFIL_PELAMAR` and `SYSTEM_INSTRUCTION` constants in `Code.gs` to reflect your personal credentials and contact details.
+6. **Authorize Permissions:** Run a test function in the editor to grant the required OAuth permissions for Gmail, Google Drive, Google Docs, Google Sheets, and external URL fetch requests.
+7. **Deploy as Web App:** Click **Deploy > New deployment**, select **Web app**, set access permissions appropriately (e.g., *Only myself*), and open the generated Web App URL.
+8. **Optional Automation Trigger:** Set up a time-driven trigger in Apps Script for `kirimEmailOtomatis` (e.g., daily between 10:00 AM – 11:00 AM) to automate queued email delivery.
 
 ## Security Notes
 
-- Jangan menyimpan API keys langsung di source code.
-- Jangan mengunggah informasi pribadi pelamar atau dokumen sensitif.
-- Batasi akses Google Sheets, Google Drive, dan Web App sesuai kebutuhan.
-- Periksa kembali konfigurasi deployment sebelum aplikasi digunakan.
+* **Never commit API keys or File IDs:** Always sanitize sensitive credentials before pushing code to a public repository.
+* **Protect Personal Information:** Keep personal phone numbers, email addresses, and private documents out of public source files.
+* **Restrict Web App Access:** Ensure the deployed Web App is restricted to your own Google account so unauthorized users cannot trigger emails or consume your API quota.
 
 ## Disclaimer
 
-This project is intended to assist with job application workflows. AI-generated content may contain errors and should be reviewed before use. Users remain responsible for verifying job information, reviewing application materials, and confirming email recipients before sending applications.
+This tool is built to streamline and assist with job application workflows. AI-generated outputs may occasionally contain inaccuracies or formatting anomalies and **must be reviewed before sending**. Users bear full professional responsibility for verifying job postings, ensuring the accuracy of their legal credentials, and confirming recipient details prior to dispatching any application.
 
 ## Status
 
-Personal project under development.
-Semua hal dalam proyek ini adalah difokuskan untuk anak hukum yang telah melakukan sertifikasi advokat PKPA ataupun UPA, Mohon sesuaikan kualitas dan responsibilitas anda.
+Active personal project under continuous development.
 
 ## Author
 
-Alfin Fadhli
+**Alfin Fadhli, S.H.**
+
+```
+
+```
