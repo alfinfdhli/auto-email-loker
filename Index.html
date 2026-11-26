@@ -74,7 +74,6 @@
       z-index: 100;
     }
 
-    /* TOMBOL AUDIO (WARNA TEXT & BORDER HITAM) */
     .audio-toggle-btn {
       background: rgba(255, 255, 255, 0.95);
       border: 1.5px solid #000000;
@@ -86,12 +85,12 @@
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
       transition: all 0.2s;
+      width: auto;
+      margin-top: 0;
     }
-    .audio-toggle-btn:hover { background: #ffffff; color: #000000; transform: scale(1.03); }
+    .audio-toggle-btn:hover { background: #ffffff; transform: scale(1.03); }
 
     .menu-dropdown-wrapper { position: relative; }
-    
-    /* TOMBOL TITIK 3 (WARNA TEXT & BORDER HITAM) */
     .menu-dots-btn {
       background: rgba(255, 255, 255, 0.95);
       border: 1.5px solid #000000;
@@ -106,6 +105,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 0;
+      margin-top: 0;
     }
 
     .dropdown-menu {
@@ -121,7 +122,6 @@
       overflow: hidden;
       border: 1px solid #eee;
     }
-
     .dropdown-menu.show { display: block; }
 
     .dropdown-item {
@@ -141,14 +141,14 @@
     .card {
       background: var(--card-bg);
       backdrop-filter: blur(12px);
-      padding: 16px 20px;
+      padding: 14px 18px;
       border-radius: 18px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       position: relative;
       z-index: 10;
       transition: all 0.4s ease;
       border: 2px solid rgba(255,255,255,0.8);
-      max-height: 88vh;
+      max-height: 89vh;
       overflow-y: auto;
     }
 
@@ -158,50 +158,110 @@
       background: rgba(255, 230, 230, 0.96);
     }
 
-    h2 { text-align: center; color: var(--accent-color); margin: 0 0 10px 0; font-size: 16px; font-weight: 800; }
-    label { font-weight: bold; margin-top: 8px; display: block; font-size: 11.5px; color: #333; }
+    h2 { text-align: center; color: var(--accent-color); margin: 0 0 8px 0; font-size: 15px; font-weight: 800; }
+    label { font-weight: bold; margin-top: 7px; display: block; font-size: 11px; color: #333; }
     
-    input[type="file"], textarea, button { 
+    input[type="file"], textarea, button.main-btn { 
       width: 100%; 
       margin-top: 4px; 
       padding: 6px 8px; 
       border-radius: 8px; 
       border: 1px solid #ccc; 
       box-sizing: border-box; 
-      font-size: 12px; 
+      font-size: 11.5px; 
     }
-    textarea { resize: none; height: 46px; }
+    textarea { resize: none; height: 44px; }
     
     .paste-box { 
       border: 2px dashed #1a73e8; 
       background: rgba(232, 240, 254, 0.85); 
-      padding: 8px; 
+      padding: 7px; 
       text-align: center; 
       border-radius: 8px; 
       margin-top: 4px; 
       cursor: pointer; 
       color: #1a73e8; 
-      font-size: 11.5px; 
+      font-size: 11px; 
       line-height: 1.3; 
       transition: all 0.3s; 
     }
     .paste-box:hover { background: #d2e3fc; transform: scale(1.01); }
-    .preview-img { max-width: 100%; max-height: 110px; margin-top: 6px; border-radius: 8px; display: none; margin-left: auto; margin-right: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .preview-img { max-width: 100%; max-height: 95px; margin-top: 6px; border-radius: 8px; display: none; margin-left: auto; margin-right: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
     
-    button { background-color: #1a73e8; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 12px; transition: 0.2s; font-size: 13.5px; padding: 9px; border-radius: 10px; box-shadow: 0 3px 10px rgba(26,115,232,0.3); }
-    button:hover { background-color: #1557b0; transform: translateY(-1px); }
-    button:disabled { background-color: #a0c3ff; cursor: not-allowed; box-shadow: none; }
+    /* OPSI BAHASA & CHECKBOX */
+    .lang-group { display: flex; gap: 6px; margin-top: 4px; }
+    .lang-btn {
+      flex: 1;
+      padding: 6px 4px;
+      border-radius: 8px;
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      color: #334155;
+      font-size: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 0;
+    }
+    .lang-btn.active {
+      background: #1a73e8;
+      color: #ffffff;
+      border-color: #1a73e8;
+    }
+
+    .box-panel {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 7px 9px;
+      margin-top: 6px;
+    }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #222;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 0;
+    }
+    .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px 8px;
+      margin-top: 5px;
+    }
+    .check-grid label {
+      margin-top: 0;
+      font-weight: 500;
+      font-size: 10.5px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+    }
+
+    button.main-btn { background-color: #1a73e8; color: white; border: none; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.2s; font-size: 13px; padding: 9px; border-radius: 10px; box-shadow: 0 3px 10px rgba(26,115,232,0.3); }
+    button.main-btn:hover { background-color: #1557b0; transform: translateY(-1px); }
+    button.main-btn:disabled { background-color: #a0c3ff; cursor: not-allowed; box-shadow: none; }
     
-    #status { margin-top: 8px; font-weight: bold; text-align: center; font-size: 11.5px; padding: 6px; border-radius: 8px; }
+    #status { margin-top: 8px; font-weight: bold; text-align: center; font-size: 11px; padding: 6px; border-radius: 8px; }
     .success { background-color: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
     .error { background-color: #fce8e6; color: #c5221f; border: 1px solid #fad2cf; }
     .loading { background-color: #e8f0fe; color: #1a73e8; border: 1px solid #d2e3fc; }
     
-    .warning-box { background-color: #fef7e0; color: #b06000; border: 1px solid #feefc3; padding: 10px; border-radius: 10px; margin-top: 10px; font-size: 11.5px; line-height: 1.4; }
-    .helper-box { background-color: #f8f9fa; border: 1px solid #dadce0; padding: 8px; border-radius: 6px; margin-top: 8px; font-size: 11px; white-space: pre-wrap; font-family: monospace; max-height: 150px; overflow-y: auto; }
-    .btn-copy { background-color: #34a853; margin-top: 6px; padding: 6px; font-size: 11.5px; }
-    .file-info { font-size: 10px; color: #555; margin-top: 2px; }
+    .pdf-action-box { background-color: #e6f4ea; border: 1px solid #34a853; padding: 9px; border-radius: 10px; margin-top: 8px; }
+    .btn-download-pdf { background-color: #0f9d58; color: #fff; border: none; border-radius: 8px; padding: 8px; width: 100%; font-size: 12px; font-weight: bold; cursor: pointer; margin-top: 0; }
+    .btn-download-pdf:hover { background-color: #0b8043; }
+    .btn-copy-cover { background-color: #1a73e8; color: #fff; border: none; border-radius: 8px; padding: 6px; width: 100%; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 5px; }
 
+    .warning-box { background-color: #fef7e0; color: #b06000; border: 1px solid #feefc3; padding: 9px; border-radius: 10px; margin-top: 8px; font-size: 11px; line-height: 1.4; }
+    .helper-box { background-color: #f8f9fa; border: 1px solid #dadce0; padding: 7px; border-radius: 6px; margin-top: 6px; font-size: 10.5px; white-space: pre-wrap; font-family: monospace; max-height: 120px; overflow-y: auto; }
+    .btn-copy { background-color: #34a853; color: white; border: none; border-radius: 6px; width: 100%; margin-top: 6px; padding: 6px; font-size: 11px; font-weight: bold; cursor: pointer; }
+    .file-info { font-size: 9.5px; color: #555; margin-top: 2px; }
+
+    /* ANIMASI ZOO & BACKGROUND */
     .tree-branch { position: fixed; top: 0; right: 0; width: 200px; height: 90px; pointer-events: none; z-index: 15; }
     .snake-svg { position: absolute; top: 18px; right: 25px; width: 85px; height: 30px; animation: snakeSlither 4s ease-in-out infinite alternate; }
     @keyframes snakeSlither { 0% { transform: translateX(0) scaleY(1); } 100% { transform: translateX(-20px) scaleY(0.85); } }
@@ -221,38 +281,29 @@
     @keyframes cloudFloat { 0% { left: -100px; } 100% { left: 105vw; } }
 
     .zoo-char { position: fixed; pointer-events: none; z-index: 20; transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-
     .giraffe-svg { bottom: -10px; left: 3%; width: 65px; height: 105px; transform: translateY(65px); }
     .lion-svg    { bottom: -10px; left: 24%; width: 58px; height: 58px; transform: translateY(38px); }
     .human-svg   { bottom: -10px; left: 47%; width: 58px; height: 58px; transform: translateY(38px); }
     .panda-svg   { bottom: -10px; left: 69%; width: 58px; height: 58px; transform: translateY(38px); }
     .cat-svg     { bottom: -10px; left: 88%; width: 55px; height: 55px; transform: translateY(35px); }
-
-    .monkey-left-svg   { top: 30%; left: -5px; width: 50px; height: 50px; transform: translateX(-35px) rotate(90deg); }
-    .elephant-left-svg { top: 60%; left: -5px; width: 58px; height: 58px; transform: translateX(-40px) rotate(90deg); }
-    .bear-right-svg    { top: 30%; right: -5px; width: 55px; height: 55px; transform: translateX(38px) rotate(-90deg); }
-    .koala-right-svg   { top: 60%; right: -5px; width: 50px; height: 50px; transform: translateX(35px) rotate(-90deg); }
-    .owl-top-svg       { top: -8px; left: 18%; width: 48px; height: 48px; transform: translateY(-33px) rotate(180deg); }
-    .bat-top-svg       { top: -8px; right: 20%; width: 50px; height: 48px; transform: translateY(-33px) rotate(180deg); }
+    .monkey-left-svg { top: 30%; left: -5px; width: 50px; height: 50px; transform: translateX(-35px) rotate(90deg); }
+    .bear-right-svg  { top: 30%; right: -5px; width: 55px; height: 55px; transform: translateX(38px) rotate(-90deg); }
+    .owl-top-svg     { top: -8px; left: 18%; width: 48px; height: 48px; transform: translateY(-33px) rotate(180deg); }
 
     .state-curious .giraffe-svg { transform: translateY(15px); }
     .state-curious .lion-svg    { transform: translateY(8px); }
     .state-curious .human-svg   { transform: translateY(6px); }
     .state-curious .panda-svg   { transform: translateY(6px); }
     .state-curious .cat-svg     { transform: translateY(5px); }
-    .state-curious .monkey-left-svg   { transform: translateX(-6px) rotate(90deg); }
-    .state-curious .elephant-left-svg { transform: translateX(-8px) rotate(90deg); }
-    .state-curious .bear-right-svg    { transform: translateX(6px) rotate(-90deg); }
-    .state-curious .koala-right-svg   { transform: translateX(6px) rotate(-90deg); }
-    .state-curious .owl-top-svg       { transform: translateY(-4px) rotate(180deg); }
-    .state-curious .bat-top-svg       { transform: translateY(-4px) rotate(180deg); }
+    .state-curious .monkey-left-svg { transform: translateX(-6px) rotate(90deg); }
+    .state-curious .bear-right-svg  { transform: translateX(6px) rotate(-90deg); }
+    .state-curious .owl-top-svg     { transform: translateY(-4px) rotate(180deg); }
 
     .state-loading-zoo .giraffe-svg { transform: translateY(10px); animation: zooBob 0.9s infinite ease-in-out alternate; }
     .state-loading-zoo .lion-svg    { transform: translateY(4px);  animation: zooBob 0.8s infinite ease-in-out alternate 0.1s; }
     .state-loading-zoo .human-svg   { transform: translateY(2px);  animation: zooBob 1.0s infinite ease-in-out alternate 0.2s; }
     .state-loading-zoo .panda-svg   { transform: translateY(2px);  animation: zooBob 0.9s infinite ease-in-out alternate 0.25s; }
     .state-loading-zoo .cat-svg     { transform: translateY(1px);  animation: zooBob 0.7s infinite ease-in-out alternate 0.15s; }
-
     @keyframes zooBob { 0% { transform: translateY(12px); } 100% { transform: translateY(-6px); } }
 
     .state-success-zoo .giraffe-svg { transform: translateY(-12px); }
@@ -318,25 +369,51 @@
   <svg class="zoo-char owl-top-svg mode-idle" viewBox="0 0 100 100"><circle cx="50" cy="50" r="30" fill="#607d8b"/><circle cx="37" cy="48" r="11" fill="#fff"/><circle cx="63" cy="48" r="11" fill="#fff"/><polygon points="46,56 54,56 50,62" fill="#ffb300"/><g class="eye-normal"><circle cx="37" cy="48" r="4" fill="#222"/><circle cx="63" cy="48" r="4" fill="#222"/></g><g class="eye-curious"><circle cx="37" cy="48" r="7" fill="#222"/><circle cx="63" cy="48" r="7" fill="#222"/></g><g class="eye-happy"><path d="M 32 48 Q 37 42 42 48" stroke="#222" stroke-width="2"/><path d="M 58 48 Q 63 42 68 48" stroke="#222" stroke-width="2"/></g><g class="eye-sad"><path d="M 32 45 L 42 51" stroke="#222" stroke-width="2"/><path d="M 58 45 L 68 51" stroke="#222" stroke-width="2"/></g></svg>
 
   <div class="card">
-    <h2> APP GUA SENDIRI ANJENG MANTEPP BANGET Input Loker Otomatis (AI Engine)</h2>
+    <h2>Input Loker & Cover Letter AI</h2>
     
-    <label>1. Gambar SS Loker (Upload ATAU Tekan <u>Ctrl + V</u>):</label>
-    <div class="paste-box" id="pasteArea">
-      Klik & Tekan <b>Ctrl + V</b> untuk Paste SS Gambar
-    </div>
+    <!-- 1. INPUT SS / TEKS -->
+    <label>1. Gambar SS Loker (Upload / <u>Ctrl + V</u>):</label>
+    <div class="paste-box" id="pasteArea">Klik & Tekan <b>Ctrl + V</b> untuk Paste SS Gambar</div>
     <input type="file" id="imageInput" accept="image/png, image/jpeg, image/webp" onchange="handleFileSelect(this)">
     <img id="imgPreview" class="preview-img" alt="Preview Gambar">
 
-    <label>2. Teks / Link Loker (Opsional):</label>
+    <label>2. Teks / Link Loker:</label>
     <textarea id="textInput" rows="2" placeholder="Tempel deskripsi loker / link GForm di sini..." oninput="triggerCuriousState()"></textarea>
 
-    <label>3. Dokumen Tambahan (Opsional PDF/Word/JPG/PNG):</label>
-    <input type="file" id="docInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" onchange="triggerCuriousState()">
-    <div class="file-info">*Misal: Motivation Letter. Disimpan ke Drive & dikirim ke HRD.</div>
+    <!-- 2. OPSI SURAT LAMARAN (ID / EN / TIDAK) -->
+    <label>3. Generate Surat Lamaran PDF (Opsional):</label>
+    <div class="lang-group">
+      <button type="button" class="lang-btn active" id="langNone" onclick="setCoverLang('NONE')">Tidak Perlu</button>
+      <button type="button" class="lang-btn" id="langID" onclick="setCoverLang('ID')">🇮🇩 Bahasa Indo</button>
+      <button type="button" class="lang-btn" id="langEN" onclick="setCoverLang('EN')">🇬🇧 English</button>
+    </div>
 
-    <button id="btnSubmit" onclick="processLoker()">Proses & Masukkan ke Sheet</button>
+    <!-- 4 & 5. OPSI EMAIL OTOMATIS & LAMPIRAN DOKUMEN -->
+    <div class="box-panel">
+      <label class="check-row">
+        <input type="checkbox" id="chkSaveSheet" checked onchange="toggleEmailOptions()">
+        <span>Masukkan ke Sheet (Auto-Email Jam 10–11 Pagi)</span>
+      </label>
+
+      <div id="emailAttachmentPanel">
+        <div class="check-grid">
+          <label><input type="checkbox" id="chkCv" checked> CV</label>
+          <label><input type="checkbox" id="chkSurat" checked> Surat Lamaran PDF</label>
+          <label><input type="checkbox" id="chkIjazah"> Ijazah</label>
+          <label><input type="checkbox" id="chkTranskrip"> Transkrip Nilai</label>
+          <label><input type="checkbox" id="chkPkpa"> Sertif PKPA-UPA</label>
+        </div>
+
+        <label style="margin-top:6px;">Lampiran Tambahan (PDF/Word/Excel/Gambar):</label>
+        <input type="file" id="docInput" accept=".pdf,.doc,.docx,.xls,.xlsx,.csv,.jpg,.jpeg,.png,.txt" onchange="triggerCuriousState()">
+        <div class="file-info">*Otomatis masuk Drive & ikut terkirim saat email dijadwalkan.</div>
+      </div>
+    </div>
+
+    <button class="main-btn" id="btnSubmit" onclick="processLoker()">Proses & Generate</button>
     
     <div id="status"></div>
+    <div id="pdfResultArea"></div>
     <div id="gformAlertArea"></div>
   </div>
 
@@ -350,30 +427,43 @@
     var pastedBase64 = null;
     var pastedMime = null;
     var isProcessing = false;
+    var selectedCoverLang = "NONE";
+    var lastPdfBase64 = "";
+    var lastPdfName = "";
+    var lastCoverText = "";
+
     var rainParticles = [];
     var isRaining = true;
     var rainIntensity = 30;
-    
     var appSheetUrl = "";
     var appDriveUrl = "";
-
     var audioCtx = null;
     var isAudioMuted = false;
     var soundInterval = null;
 
+    function setCoverLang(lang) {
+      selectedCoverLang = lang;
+      document.getElementById('langNone').classList.toggle('active', lang === 'NONE');
+      document.getElementById('langID').classList.toggle('active', lang === 'ID');
+      document.getElementById('langEN').classList.toggle('active', lang === 'EN');
+      triggerCuriousState();
+    }
+
+    function toggleEmailOptions() {
+      var checked = document.getElementById('chkSaveSheet').checked;
+      document.getElementById('emailAttachmentPanel').style.display = checked ? 'block' : 'none';
+      document.getElementById('btnSubmit').innerText = checked ? 'Proses & Masukkan ke Sheet' : 'Generate Surat Lamaran PDF';
+    }
+
     function initAudio() {
-      if (!audioCtx) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     }
 
     function toggleAudio() {
       isAudioMuted = !isAudioMuted;
-      var btn = document.getElementById('audioToggleBtn');
-      btn.innerText = isAudioMuted ? "🔇 Audio OFF" : "🔊 Audio ON";
+      document.getElementById('audioToggleBtn').innerText = isAudioMuted ? "🔇 Audio OFF" : "🔊 Audio ON";
     }
 
-    // AUDIO SYNTH (VOLUME DISESUAIKAN MENJADI 200%)
     function playSynthSound(type) {
       if (isAudioMuted) return;
       initAudio();
@@ -389,66 +479,53 @@
           var gain = audioCtx.createGain();
           osc.type = 'sine';
           osc.frequency.setValueAtTime(freqs[pitchIndex % freqs.length], audioCtx.currentTime);
-          gain.gain.setValueAtTime(0.08, audioCtx.currentTime); // Ditingkatkan 200% (dari 0.04)
+          gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
           gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.15);
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.15);
+          osc.connect(gain); gain.connect(audioCtx.destination);
+          osc.start(); osc.stop(audioCtx.currentTime + 0.15);
           pitchIndex++;
         }, 180);
-
       } else if (type === 'success') {
         if (soundInterval) clearInterval(soundInterval);
-        var notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
-        notes.forEach(function(freq, index) {
+        [523.25, 659.25, 783.99, 1046.50, 1318.51].forEach(function(freq, index) {
           setTimeout(function() {
             if (isAudioMuted) return;
             var osc = audioCtx.createOscillator();
             var gain = audioCtx.createGain();
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.2, audioCtx.currentTime); // Ditingkatkan 200% (dari 0.1)
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.35);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.35);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.35);
           }, index * 90);
         });
-
       } else if (type === 'failure') {
         if (soundInterval) clearInterval(soundInterval);
-        var sadNotes = [400, 350, 300, 220];
-        sadNotes.forEach(function(freq, index) {
+        [400, 350, 300, 220].forEach(function(freq, index) {
           setTimeout(function() {
             if (isAudioMuted) return;
             var osc = audioCtx.createOscillator();
             var gain = audioCtx.createGain();
             osc.type = 'sawtooth';
             osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.16, audioCtx.currentTime); // Ditingkatkan 200% (dari 0.08)
+            gain.gain.setValueAtTime(0.16, audioCtx.currentTime);
             gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.3);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
           }, index * 110);
         });
       }
     }
 
     function toggleMenu() {
-      var dropdown = document.getElementById('dropdownMenu');
-      dropdown.classList.toggle('show');
+      document.getElementById('dropdownMenu').classList.toggle('show');
     }
 
     window.onclick = function(e) {
       if (!e.target.matches('.menu-dots-btn')) {
         var dropdown = document.getElementById('dropdownMenu');
-        if (dropdown && dropdown.classList.contains('show')) {
-          dropdown.classList.remove('show');
-        }
+        if (dropdown && dropdown.classList.contains('show')) dropdown.classList.remove('show');
       }
     };
 
@@ -459,29 +536,15 @@
       }).getAppLinks();
     }
 
-    function openSheetLink() {
-      if (appSheetUrl) window.open(appSheetUrl, '_blank');
-      else alert("Link Google Sheet belum siap.");
-    }
-
-    function openDriveLink() {
-      if (appDriveUrl) window.open(appDriveUrl, '_blank');
-      else alert("Link Google Drive belum siap.");
-    }
+    function openSheetLink() { if (appSheetUrl) window.open(appSheetUrl, '_blank'); }
+    function openDriveLink() { if (appDriveUrl) window.open(appDriveUrl, '_blank'); }
 
     function triggerManualEmail() {
       setStatus("⏳ Sedang memproses pengiriman email manual...", "loading");
       setVisualState('loading');
-      
       google.script.run
-        .withSuccessHandler(function(resMsg) {
-          setStatus("🚀 " + resMsg, "success");
-          setVisualState('success');
-        })
-        .withFailureHandler(function(err) {
-          setStatus("❌ Gagal: " + err.message, "error");
-          setVisualState('failure');
-        })
+        .withSuccessHandler(function(resMsg) { setStatus("🚀 " + resMsg, "success"); setVisualState('success'); })
+        .withFailureHandler(function(err) { setStatus("❌ Gagal: " + err.message, "error"); setVisualState('failure'); })
         .jalankanKirimEmailManual();
     }
 
@@ -490,39 +553,20 @@
       var ctx = canvas.getContext('2d');
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-
-      rainParticles = [];
       for (var i = 0; i < 80; i++) {
-        rainParticles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          length: Math.random() * 12 + 6,
-          speed: Math.random() * 7 + 4
-        });
+        rainParticles.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, length: Math.random() * 12 + 6, speed: Math.random() * 7 + 4 });
       }
-
       function renderLoop() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-
         if (isRaining) {
           ctx.strokeStyle = 'rgba(174, 194, 224, 0.6)';
           ctx.lineWidth = 1.2;
           ctx.lineCap = 'round';
-
           for (var i = 0; i < rainIntensity; i++) {
             var p = rainParticles[i];
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p.x - 2, p.y + p.length);
-            ctx.stroke();
-
-            p.y += p.speed;
-            p.x -= 0.5;
-
-            if (p.y > canvas.height) {
-              p.y = -20;
-              p.x = Math.random() * canvas.width;
-            }
+            ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x - 2, p.y + p.length); ctx.stroke();
+            p.y += p.speed; p.x -= 0.5;
+            if (p.y > canvas.height) { p.y = -20; p.x = Math.random() * canvas.width; }
           }
         }
         requestAnimationFrame(renderLoop);
@@ -533,91 +577,42 @@
     function setVisualState(state) {
       var body = document.body;
       body.className = '';
-      
       var chars = document.querySelectorAll('.zoo-char');
-      chars.forEach(function(c) {
-        c.classList.remove('mode-idle', 'mode-curious', 'mode-loading', 'mode-success', 'mode-failure');
-      });
+      chars.forEach(function(c) { c.classList.remove('mode-idle', 'mode-curious', 'mode-loading', 'mode-success', 'mode-failure'); });
 
       if (state === 'curious') {
-        body.classList.add('state-curious');
-        chars.forEach(function(c) { c.classList.add('mode-curious'); });
-        rainIntensity = 40;
+        body.classList.add('state-curious'); chars.forEach(function(c) { c.classList.add('mode-curious'); }); rainIntensity = 40;
       } else if (state === 'loading') {
-        body.classList.add('state-loading-bg', 'state-loading-zoo');
-        chars.forEach(function(c) { c.classList.add('mode-loading'); });
-        rainIntensity = 75;
-        playSynthSound('thinking');
+        body.classList.add('state-loading-bg', 'state-loading-zoo'); chars.forEach(function(c) { c.classList.add('mode-loading'); }); rainIntensity = 75; playSynthSound('thinking');
       } else if (state === 'success') {
-        body.classList.add('state-success-bg', 'state-success-zoo');
-        chars.forEach(function(c) { c.classList.add('mode-success'); });
-        triggerFireworks();
-        rainIntensity = 15;
-        playSynthSound('success');
+        body.classList.add('state-success-bg', 'state-success-zoo'); chars.forEach(function(c) { c.classList.add('mode-success'); }); triggerFireworks(); rainIntensity = 15; playSynthSound('success');
       } else if (state === 'failure') {
-        body.classList.add('state-failure-bg', 'state-failure-zoo');
-        chars.forEach(function(c) { c.classList.add('mode-failure'); });
-        rainIntensity = 80;
-        playSynthSound('failure');
+        body.classList.add('state-failure-bg', 'state-failure-zoo'); chars.forEach(function(c) { c.classList.add('mode-failure'); }); rainIntensity = 80; playSynthSound('failure');
       } else {
-        chars.forEach(function(c) { c.classList.add('mode-idle'); });
-        rainIntensity = 30;
+        chars.forEach(function(c) { c.classList.add('mode-idle'); }); rainIntensity = 30;
       }
     }
 
-    function triggerCuriousState() {
-      if (!isProcessing) {
-        setVisualState('curious');
-      }
-    }
+    function triggerCuriousState() { if (!isProcessing) setVisualState('curious'); }
 
     function triggerFireworks() {
       var canvas = document.getElementById('effectCanvas');
       var ctx = canvas.getContext('2d');
-
       var particles = [];
       var colors = ['#ff4d4d', '#ffcc00', '#33cc33', '#3399ff', '#ff66cc', '#00ffff', '#ffffff'];
-
-      var centers = [
-        { x: canvas.width * 0.20, y: canvas.height * 0.30 },
-        { x: canvas.width * 0.50, y: canvas.height * 0.20 },
-        { x: canvas.width * 0.80, y: canvas.height * 0.30 }
-      ];
-
-      centers.forEach(function(center) {
+      [{ x: canvas.width * 0.20, y: canvas.height * 0.30 }, { x: canvas.width * 0.50, y: canvas.height * 0.20 }, { x: canvas.width * 0.80, y: canvas.height * 0.30 }].forEach(function(center) {
         for (var i = 0; i < 60; i++) {
           var angle = Math.random() * Math.PI * 2;
           var speed = Math.random() * 12 + 3;
-          particles.push({
-            x: center.x,
-            y: center.y,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            radius: Math.random() * 3.5 + 1.5,
-            alpha: 1,
-            decay: Math.random() * 0.02 + 0.01
-          });
+          particles.push({ x: center.x, y: center.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, color: colors[Math.floor(Math.random() * colors.length)], radius: Math.random() * 3.5 + 1.5, alpha: 1, decay: Math.random() * 0.02 + 0.01 });
         }
       });
-
       function animate() {
         var active = false;
         particles.forEach(function(p) {
           if (p.alpha > 0) {
-            active = true;
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.25;
-            p.alpha -= p.decay;
-
-            ctx.save();
-            ctx.globalAlpha = Math.max(0, p.alpha);
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-            ctx.fillStyle = p.color;
-            ctx.fill();
-            ctx.restore();
+            active = true; p.x += p.vx; p.y += p.vy; p.vy += 0.25; p.alpha -= p.decay;
+            ctx.save(); ctx.globalAlpha = Math.max(0, p.alpha); ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2); ctx.fillStyle = p.color; ctx.fill(); ctx.restore();
           }
         });
         if (active) requestAnimationFrame(animate);
@@ -630,18 +625,13 @@
       for (var i = 0; i < items.length; i++) {
         if (items[i].type.indexOf("image") === 0) {
           var blob = items[i].getAsFile();
-          if (blob.size > 7 * 1024 * 1024) {
-            setStatus("Ukuran gambar hasil paste melebihi batas 7MB!", "error");
-            setVisualState('failure');
-            return;
-          }
+          if (blob.size > 7 * 1024 * 1024) { setStatus("Ukuran gambar melebihi 7MB!", "error"); setVisualState('failure'); return; }
           var reader = new FileReader();
           reader.onload = function(event) {
             pastedBase64 = event.target.result.split(',')[1];
             pastedMime = blob.type;
             var img = document.getElementById('imgPreview');
-            img.src = event.target.result;
-            img.style.display = 'block';
+            img.src = event.target.result; img.style.display = 'block';
             document.getElementById('pasteArea').innerHTML = "✅ <b>Gambar Berhasil Di-paste!</b> (" + Math.round(blob.size/1024) + " KB)";
             setVisualState('curious');
           };
@@ -655,19 +645,13 @@
     function handleFileSelect(input) {
       if (input.files && input.files[0]) {
         var file = input.files[0];
-        if (file.size > 7 * 1024 * 1024) {
-          setStatus("Ukuran file gambar melebihi batas 7MB!", "error");
-          setVisualState('failure');
-          input.value = "";
-          return;
-        }
+        if (file.size > 7 * 1024 * 1024) { setStatus("Ukuran file gambar melebihi 7MB!", "error"); setVisualState('failure'); input.value = ""; return; }
         var reader = new FileReader();
         reader.onload = function(e) {
           pastedBase64 = e.target.result.split(',')[1];
           pastedMime = file.type;
           var img = document.getElementById('imgPreview');
-          img.src = e.target.result;
-          img.style.display = 'block';
+          img.src = e.target.result; img.style.display = 'block';
           document.getElementById('pasteArea').innerHTML = "📁 <b>File Gambar Terpilih!</b>";
           setVisualState('curious');
         };
@@ -679,54 +663,67 @@
       if (isProcessing) return;
 
       var textInput = document.getElementById('textInput').value;
+      var saveToSheet = document.getElementById('chkSaveSheet').checked;
       var docInput = document.getElementById('docInput').files[0];
       var btn = document.getElementById('btnSubmit');
 
       if (!pastedBase64 && textInput.trim() === "") {
-        setStatus("Harap masukan gambar SS loker ATAU isi teks/link deskripsi loker!", "error");
+        setStatus("Harap masukkan gambar SS loker ATAU teks deskripsi loker!", "error");
         setVisualState('failure');
         return;
       }
 
-      if (docInput && docInput.size > 5 * 1024 * 1024) {
-        setStatus("Ukuran dokumen tambahan melebihi batas 5MB!", "error");
+      if (!saveToSheet && selectedCoverLang === "NONE") {
+        setStatus("Pilih Bahasa Surat Lamaran (ID/EN) atau centang opsi Masukkan ke Sheet!", "error");
         setVisualState('failure');
         return;
       }
+
+      if (docInput && docInput.size > 7 * 1024 * 1024) {
+        setStatus("Ukuran lampiran tambahan melebihi batas 7MB!", "error");
+        setVisualState('failure');
+        return;
+      }
+
+      var options = {
+        coverLetterLang: selectedCoverLang,
+        saveToSheet: saveToSheet,
+        attachments: {
+          cv: document.getElementById('chkCv').checked,
+          surat: document.getElementById('chkSurat').checked,
+          ijazah: document.getElementById('chkIjazah').checked,
+          transkrip: document.getElementById('chkTranskrip').checked,
+          pkpa_upa: document.getElementById('chkPkpa').checked
+        }
+      };
 
       isProcessing = true;
       btn.disabled = true;
+      document.getElementById('pdfResultArea').innerHTML = "";
       document.getElementById('gformAlertArea').innerHTML = "";
-      setStatus("⏳ AI Gemini sedang menganalisis loker & menyusun data...", "loading");
+      setStatus("⏳ AI sedang memproses loker" + (selectedCoverLang !== "NONE" ? " & mencetak PDF..." : "..."), "loading");
       setVisualState('loading');
 
       if (docInput) {
         var docReader = new FileReader();
         docReader.onload = function(e) {
-          var docBase64 = e.target.result.split(',')[1];
           sendToBackend(pastedBase64, pastedMime, textInput, {
             name: docInput.name,
-            mimeType: docInput.type,
-            base64: docBase64
-          });
-        };
-        docReader.onerror = function() {
-          setStatus("Gagal membaca file dokumen tambahan.", "error");
-          setVisualState('failure');
-          isProcessing = false;
-          btn.disabled = false;
+            mimeType: docInput.type || "application/octet-stream",
+            base64: e.target.result.split(',')[1]
+          }, options);
         };
         docReader.readAsDataURL(docInput);
       } else {
-        sendToBackend(pastedBase64, pastedMime, textInput, null);
+        sendToBackend(pastedBase64, pastedMime, textInput, null, options);
       }
     }
 
-    function sendToBackend(base64Image, mimeType, textInput, extraDoc) {
+    function sendToBackend(base64Image, mimeType, textInput, extraDoc, options) {
       google.script.run
         .withSuccessHandler(onSuccess)
         .withFailureHandler(onFailure)
-        .analisisDanSimpan(base64Image, mimeType, textInput, extraDoc);
+        .analisisDanSimpan(base64Image, mimeType, textInput, extraDoc, options);
     }
 
     function onSuccess(responseRaw) {
@@ -735,36 +732,68 @@
       setStatus("🎉 " + res.message, "success");
       setVisualState('success');
 
-      var alertArea = document.getElementById('gformAlertArea');
+      var pdfArea = document.getElementById('pdfResultArea');
+      if (res.pdf_generated && res.pdf_base64) {
+        lastPdfBase64 = res.pdf_base64;
+        lastPdfName = res.pdf_file_name || "Surat_Lamaran_xxxx.pdf";
+        lastCoverText = res.cover_letter_text || "";
 
+        pdfArea.innerHTML =
+          '<div class="pdf-action-box">' +
+            '<button type="button" class="btn-download-pdf" onclick="downloadGeneratedPdf()">⬇️ Download PDF (' + lastPdfName + ')</button>' +
+            '<button type="button" class="btn-copy-cover" onclick="copyCoverText()">📋 Copy Teks Surat Lamaran (Untuk Jobstreet)</button>' +
+          '</div>';
+      }
+
+      var alertArea = document.getElementById('gformAlertArea');
       if (res.is_gform && res.requires_unsupported_doc) {
         var missingDoc = res.missing_docs_detail || "dokumen pendukung khusus";
         var helperContent = res.gform_helper_answers || res.pesan_lamaran;
-
         alertArea.innerHTML = 
           '<div class="warning-box">' +
-            '⚠️ <b>GForm ini membutuhkan dokumen pendukung: ' + missingDoc + '</b>. Mohon dicek ulang.<br>' +
-            'Berikut aku siapkan rangkaian isi dari GForm dan kau akan langsung dibantu ke <b>Mode Helper</b>:' +
+            '⚠️ <b>GForm membutuhkan dokumen: ' + missingDoc + '</b>.<br>' +
             '<div class="helper-box" id="helperContentText">' + helperContent + '</div>' +
-            '<button class="btn-copy" onclick="copyHelperText()">📋 Salin Semua Jawaban GForm (1-Click Copy)</button>' +
-            (res.link_gform && res.link_gform !== '-' ? '<br><br>🔗 <a href="' + res.link_gform + '" target="_blank">Klik di sini untuk Buka Link GForm</a>' : '') +
+            '<button type="button" class="btn-copy" onclick="copyHelperText()">📋 Salin Jawaban GForm</button>' +
+            (res.link_gform && res.link_gform !== '-' ? '<br><br>🔗 <a href="' + res.link_gform + '" target="_blank">Buka Link GForm</a>' : '') +
           '</div>';
       } else if (res.is_gform) {
         alertArea.innerHTML = 
           '<div class="warning-box" style="background-color:#e8f0fe; color:#1a73e8; border-color:#d2e3fc;">' +
-            'ℹ️ <b>Loker Terdeteksi Berbasis GForm.</b><br>' +
-            'Rangkaian jawaban Mode Helper telah disimpan di Google Sheet.' +
-            (res.link_gform && res.link_gform !== '-' ? '<br>🔗 <a href="' + res.link_gform + '" target="_blank">Klik di sini untuk Buka Link GForm</a>' : '') +
+            'ℹ️ <b>Loker Terdeteksi Berbasis GForm.</b>' +
+            (res.link_gform && res.link_gform !== '-' ? '<br>🔗 <a href="' + res.link_gform + '" target="_blank">Buka Link GForm</a>' : '') +
           '</div>';
       }
 
       resetForm();
     }
 
+    function downloadGeneratedPdf() {
+      if (!lastPdfBase64) return;
+      var byteChars = atob(lastPdfBase64);
+      var byteNumbers = new Array(byteChars.length);
+      for (var i = 0; i < byteChars.length; i++) byteNumbers[i] = byteChars.charCodeAt(i);
+      var blob = new Blob([new Uint8Array(byteNumbers)], { type: "application/pdf" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = lastPdfName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function copyCoverText() {
+      if (!lastCoverText) return;
+      navigator.clipboard.writeText(lastCoverText).then(function() {
+        alert("✅ Teks surat lamaran berhasil disalin ke clipboard!");
+      });
+    }
+
     function copyHelperText() {
       var text = document.getElementById('helperContentText').innerText;
       navigator.clipboard.writeText(text).then(function() {
-        alert("✅ Rangkaian jawaban GForm berhasil disalin ke clipboard!");
+        alert("✅ Rangkaian jawaban GForm berhasil disalin!");
       });
     }
 
